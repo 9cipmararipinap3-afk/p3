@@ -1,21 +1,14 @@
-
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Shield, 
   PlusCircle, 
   BarChart3, 
   FileText, 
-  Search, 
-  Settings, 
-  Upload,
-  Calendar,
-  Filter,
-  ArrowRight,
-  MapPin,
-  Clock,
-  Loader2
+  ExternalLink,
+  Plus,
+  ArrowRight
 } from 'lucide-react';
-import { PoliceReport, CrimeNature, ReportPeriod } from './types';
+import { PoliceReport } from './types';
 import ReportForm from './components/ReportForm';
 import StatisticsDashboard from './components/StatisticsDashboard';
 import ReportList from './components/ReportList';
@@ -24,6 +17,7 @@ const App: React.FC = () => {
   const [reports, setReports] = useState<PoliceReport[]>([]);
   const [view, setView] = useState<'list' | 'add' | 'stats'>('list');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const projectId = process.env.VERCEL_PROJECT_ID;
 
   // Load data from localStorage
   useEffect(() => {
@@ -91,13 +85,26 @@ const App: React.FC = () => {
           </button>
         </nav>
 
-        <div className="p-4 border-t border-slate-800">
+        <div className="p-4 space-y-3">
           <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700">
             <p className="text-xs text-slate-400 mb-1">Status do Sistema</p>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
               <span className="text-sm font-medium">Operacional</span>
             </div>
+          </div>
+          
+          <div className="bg-indigo-950/30 p-4 rounded-xl border border-indigo-500/20">
+            <p className="text-[10px] uppercase font-bold text-indigo-400 mb-1 tracking-wider">Vercel Deployment</p>
+            <p className="text-[11px] text-slate-300 font-mono truncate mb-2">{projectId}</p>
+            <a 
+              href={`https://vercel.com/project/${projectId}`} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-[11px] text-indigo-400 hover:text-indigo-300 flex items-center gap-1 transition-colors"
+            >
+              Ver Painel <ExternalLink className="w-3 h-3" />
+            </a>
           </div>
         </div>
       </aside>
