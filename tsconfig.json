@@ -16,7 +16,8 @@
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
     "allowJs": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "types": ["node", "vite/client"]
   },
   "include": ["."],
   "exclude": ["node_modules", "dist"]
