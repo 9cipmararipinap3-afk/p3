@@ -1,6 +1,6 @@
 {
-  "name": " Sistema de Gestão de Ocorrências - 9ª CIPM",
-  "description": "Aplicativo para registro, processamento via IA (PDF/Imagem) e análise estatística de boletins de ocorrência, com relatórios comparativos periódicos.",
+  "name": "SGO - 9ª CIPM",
+  "description": "Sistema de Gestão de Ocorrências com processamento inteligente de Boletins de Ocorrência via Gemini AI.",
   "requestFramePermissions": [
     "camera"
   ]

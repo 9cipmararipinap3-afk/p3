@@ -1,34 +1,39 @@
-
 import { GoogleGenAI, Type } from "@google/genai";
 
-const apiKey = process.env.API_KEY || "";
-
 export const extractDataFromContent = async (base64Data: string, mimeType: string = 'image/png', textContent?: string) => {
-  const ai = new GoogleGenAI({ apiKey });
+  // Inicialização obrigatória conforme as diretrizes
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   
   const systemInstruction = `
-    Você é um especialista em análise de Boletins de Ocorrência (BO) da Polícia Militar de Pernambuco.
-    Sua tarefa é extrair dados estruturados de textos, imagens ou PDFs de BOs.
-    Categorize a 'nature' em um dos seguintes: 'Tráfico de Entorpecentes', 'Posse/Porte de Arma de Fogo', 'Violência Doméstica', 'Roubo/Furto' ou 'Outros'.
-    Extraia itens apreendidos (armas, drogas, munições) com quantidades e unidades.
-    Retorne SEMPRE um JSON válido.
+    Você é um assistente especializado da Polícia Militar de Pernambuco (9ª CIPM).
+    Sua função é ler imagens, PDFs ou textos de Boletins de Ocorrência e extrair dados estruturados.
+    
+    REGRAS DE CATEGORIZAÇÃO (Natureza):
+    - Tráfico de Entorpecentes: se houver apreensão de drogas para venda.
+    - Posse/Porte de Arma de Fogo: se houver armas ou munições.
+    - Violência Doméstica: casos de Lei Maria da Penha ou agressão familiar.
+    - Roubo/Furto: subtração de bens.
+    - Outros: se não se encaixar nos acima.
+
+    IMPORTANTE: 
+    - Extraia o número do BOEPM e BOEPC se visíveis.
+    - Identifique itens apreendidos detalhadamente (tipo, quantidade e unidade).
+    - O campo 'dateTime' deve ser retornado no formato YYYY-MM-DDTHH:mm.
   `;
 
   const prompt = textContent 
-    ? `Extraia os dados deste relatório policial: ${textContent}`
-    : `Analise este documento (imagem ou PDF) de um relatório policial e extraia os dados estruturados conforme o esquema.`;
-
-  const contents: any = { 
-    parts: [
-      { inlineData: { mimeType: mimeType, data: base64Data } }, 
-      { text: prompt }
-    ] 
-  };
+    ? `Extraia os dados estruturados deste texto de BO: ${textContent}`
+    : `Analise visualmente este documento e extraia todos os dados relevantes para o sistema SGO.`;
 
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
-      contents,
+      contents: {
+        parts: [
+          { inlineData: { mimeType: mimeType, data: base64Data } },
+          { text: prompt }
+        ]
+      },
       config: {
         systemInstruction,
         responseMimeType: "application/json",
@@ -37,7 +42,7 @@ export const extractDataFromContent = async (base64Data: string, mimeType: strin
           properties: {
             boepm: { type: Type.STRING },
             boepc: { type: Type.STRING },
-            dateTime: { type: Type.STRING, description: "Formato ISO 8601 ou similar encontrado" },
+            dateTime: { type: Type.STRING },
             city: { type: Type.STRING },
             neighborhood: { type: Type.STRING },
             nature: { 
@@ -66,9 +71,12 @@ export const extractDataFromContent = async (base64Data: string, mimeType: strin
       }
     });
 
-    return JSON.parse(response.text || "{}");
+    const jsonStr = response.text;
+    if (!jsonStr) throw new Error("IA retornou resposta vazia");
+    
+    return JSON.parse(jsonStr);
   } catch (error) {
-    console.error("Erro ao processar com Gemini:", error);
+    console.error("Erro no processamento Gemini:", error);
     throw error;
   }
 };
