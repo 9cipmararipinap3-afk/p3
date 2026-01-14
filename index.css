@@ -5,50 +5,60 @@
 @layer base {
   :root {
     --brand-primary: 79, 70, 229;
-    --brand-secondary: 30, 41, 59;
+    --brand-navy: 15, 23, 42;
+    --brand-surface: 248, 250, 252;
   }
 
   body {
     @apply bg-[#f8fafc] text-slate-800 antialiased;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    letter-spacing: -0.011em;
   }
 }
 
 @layer components {
-  .glass-card {
-    @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-xl;
+  .sophisticated-shadow {
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.04), 0 5px 20px -5px rgba(0, 0, 0, 0.03);
   }
   
-  .btn-primary {
-    @apply bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-2xl font-bold transition-all shadow-lg shadow-indigo-600/20 active:scale-[0.98] disabled:opacity-50;
+  .glass-sidebar {
+    @apply bg-[#0f172a] backdrop-blur-xl border-r border-slate-800/50;
   }
 
-  .input-field {
-    @apply w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all bg-white;
+  .premium-card {
+    @apply bg-white border border-slate-200/60 rounded-[2rem] sophisticated-shadow transition-all duration-300 hover:border-indigo-200/60 hover:shadow-2xl hover:shadow-indigo-500/5;
   }
 
-  .sidebar-link {
-    @apply flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-semibold;
+  .input-executive {
+    @apply w-full px-5 py-4 rounded-2xl border border-slate-200 bg-slate-50/30 focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/5 outline-none transition-all text-slate-700 font-medium;
+  }
+
+  .btn-executive {
+    @apply bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-2xl font-bold transition-all shadow-xl shadow-indigo-600/20 active:scale-[0.97] flex items-center justify-center gap-3 uppercase text-xs tracking-widest;
+  }
+
+  .nav-item-active {
+    @apply bg-indigo-600 text-white shadow-2xl shadow-indigo-600/40 translate-x-1;
   }
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 ::-webkit-scrollbar-track {
-  @apply bg-transparent;
+  @apply bg-slate-100;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-slate-300 rounded-full hover:bg-slate-400;
+  @apply bg-slate-300 rounded-full hover:bg-indigo-400;
 }
 
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-5px); }
-  100% { transform: translateY(0px); }
+/* Animations */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.animate-float {
-  animation: float 3s ease-in-out infinite;
+.animate-slide-up {
+  animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
