@@ -1,0 +1,7 @@
+{
+  "name": " Sistema de Gestão de Ocorrências - 9ª CIPM",
+  "description": "Aplicativo para registro, processamento via IA (PDF/Imagem) e análise estatística de boletins de ocorrência, com relatórios comparativos periódicos.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
